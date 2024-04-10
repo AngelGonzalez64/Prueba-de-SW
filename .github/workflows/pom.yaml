@@ -1,0 +1,19 @@
+name: Merge without review
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge without review
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const payload = context.payload.pull_request;
+            if (payload && payload.merged === true && payload.user.login !== 'Leonix64') {
+              core.setFailed('You want it? You merge it.');
+            }
